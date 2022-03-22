@@ -17,7 +17,7 @@
   //j = 7: Late St. Clair datapoints column.
 
 //question 1
-float yearlyaverages(float a[400][10])
+float yearlyaverages2020(float a[400][10])
 {
  return 0; 
 }
@@ -57,7 +57,10 @@ float frozen(float a[400][10])
   return 0;
 }
 //question 9
-
+float yearlyaverages2019(float a[400][10])
+{
+ return 0; 
+}
 
 
 int main(void) {
@@ -76,17 +79,9 @@ int main(void) {
   //j = 7: Late St. Clair datapoints column.
 
   //START: putting .txt file data in array
-  int n = 1;
-  FILE *data;
-  while(n != 0)
-  {
-    printf("Would you like to use the 2020 or 2019 dataset?\nEnter 2020 or 2019. Enter 0 to exit\n");
-    scanf("%d", &n);
 
-    
-    if (n == 2020)
-    {
-      FILE *data = fopen("2020data.txt", "r");
+
+  FILE *data = fopen("2020data.txt", "r");
       char *nums = NULL;
       size_t len = 0;
       
@@ -102,39 +97,14 @@ int main(void) {
           }
         }
         fclose(data);
-      //END: putting .txt file data in array
-    }
-    else if (n == 2019)
-    {
-      FILE *data = fopen("2019data.txt", "r");
-      char *nums = NULL;
-      size_t len = 0;
-      
-      for(int i = 0; getline(&nums, &len, data) != -1; i++) //move   vertically in the array
-      {
-        char *line = nums;
-        char *linetok = strtok(line, "   ");
-          for(int j = 0; linetok != NULL;j++) //assign data to element in array and then move horizontally through the array
-          {
-          
-            intake[i][j] = atof(linetok);
-            linetok = strtok(NULL, " ");
-          }
 
-        }
-        fclose(data);
-      //END: putting .txt file data in array
-    }
-    else if(n == 0)
-    {
-      //Catch n = 0 without printing "Please enter a valid option."
-    }
-    else
-    {
-      printf("Please enter a valid option.\n");
-    }
-
-
-  }
-printf("Program closed.");
+  yearlyaverages2020(intake);
+  coldestwarmest(intake);
+  daybyday(intake);
+  totalwarmest(intake);
+  summer(intake);
+  winter(intake);
+  frozen(intake);
+  yearlyaverages2019(intake);
+  
 }
