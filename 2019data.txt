@@ -1,13 +1,3 @@
-  Daily Lake Average Surface Water Temperature
-                     From
- Great Lakes Surface Environmental Analysis maps
-
---------------------------------------------------------
-                  Surf. Water Temp. (degrees C)
-
-Year Day    Sup.   Mich.   Huron    Erie    Ont.  St.Clr
---------------------------------------------------------
-
 2019 001    3.29    4.19    3.50    4.06    4.59    2.92
 2019 002    3.22    4.15    3.43    4.06    4.62    2.87
 2019 003    3.21    4.17    3.43    4.07    4.70    2.85

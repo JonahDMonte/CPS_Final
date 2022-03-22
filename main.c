@@ -19,8 +19,25 @@
 //question 1
 float yearlyaverages2020(float a[400][10])
 {
- return 0; 
+  float c = 0;
+  float d = 0;
+  char lakes[50][50] = {"Lake Superior", "Lake Michigan", "Lake Huron", "Lake Erie", "Lake Ontario", "Lake St. Clair"};
+  int b;
+  int x;
+  for (x = 2; x < 8; x++)
+  {
+    c = 0;
+    for (b = 0; a[b][0] == 2020; b++)
+    {
+      c = c + a[b][x]; 
+    }
+    c = c/(b+1);
+    d = d + c;
+    printf("%s: %0.2f° Celcius\n", lakes[x-2], c);
+  }
+  printf("Average: %0.2f° Celcius\n", d/6);
 }
+ 
 //question 2
 float coldestwarmest(float a[400][10])
 {
