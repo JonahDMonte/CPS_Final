@@ -19,11 +19,62 @@
 //question 1
 float yearlyaverages2020(float a[400][10])
 {
- return 0; 
+  printf("\nYEARLY AVERAGES 2020\n");
+  float c = 0;//counter value for adding up temps of a given lake
+  float d = 0;//counter value for adding up all avg temps of all lakes
+  char lakes[50][50] = {"Lake Superior", "Lake Michigan", "Lake Huron", "Lake Erie", "Lake Ontario", "Lake St. Clair"};//list of lake names.
+  float laketemps[6];//corresponding lake temps.
+  int b, x; //for-loop counters. declared here so that their scope spans the whole function.
+
+  for (x = 2; x < 8; x++)
+  {
+    c = 0;  //reset the counter every time a new lake begins
+    for (b = 0; a[b][0] == 2020; b++)
+    {
+      c = c + a[b][x]; //totaling all temps for a given lake
+    }
+    c = c/(b+1); //averaging an individual lake. b + 1 is used cuz arrays start at zero, not one
+    d = d + c; //totaling all avg temps for all 6 lakes
+    laketemps[x-2] = c; //assigning avgd vals to array
+  }
+  d = d/6; //averaging all 6 totaled lakes.
+
+
+  for (int z = 0; z < 6; z++)
+    {
+      printf("%s: %0.2f° Celcius\n", lakes[z], laketemps[z]);
+    }
+  return 0;
 }
+ 
 //question 2
 float coldestwarmest(float a[400][10])
 {
+  printf("\nCOLDEST WARMEST\n");
+   float c = 0;//counter value for adding up temps of a given lake
+  float d = 0;//counter value for adding up all avg temps of all lakes
+  char lakes[50][50] = {"Lake Superior", "Lake Michigan", "Lake Huron", "Lake Erie", "Lake Ontario", "Lake St. Clair"};//list of lake names.
+  float laketemps[6];//corresponding lake temps.
+  int b, x; //for-loop counters. declared here so that their scope spans the whole function.
+
+  for (x = 2; x < 8; x++)
+  {
+    c = 0;  //reset the counter every time a new lake begins
+    for (b = 0; a[b][0] == 2020; b++)
+    {
+      c = c + a[b][x]; //totaling all temps for a given lake
+    }
+    c = c/(b+1); //averaging an individual lake. b + 1 is used cuz arrays start at zero, not one
+    d = d + c; //totaling all avg temps for all 6 lakes
+    laketemps[x-2] = c; //assigning avgd vals to array
+  }
+  d = d/6; //averaging all 6 totaled lakes.
+
+//TODO: identify warmest and coldest lakes and +/- avg
+  for (x = 0; x < 6; x++)
+    {
+      
+    }
   return 0;
 }
 //question 3
@@ -59,7 +110,25 @@ float frozen(float a[400][10])
 //question 9
 float yearlyaverages2019(float a[400][10])
 {
- return 0; 
+  //Exact same function as yearlyaverages2020(), just remember to change the datafile being used.
+  
+  float c = 0;
+  float d = 0;
+  char lakes[50][50] = {"Lake Superior", "Lake Michigan", "Lake Huron", "Lake Erie", "Lake Ontario", "Lake St. Clair"};
+  int b;
+  int x;
+  for (x = 2; x < 8; x++)
+  {
+    c = 0;
+    for (b = 0; a[b][0] == 2020; b++)
+    {
+      c = c + a[b][x]; 
+    }
+    c = c/(b+1);
+    d = d + c;
+    //printf("%s: %0.2f° Celcius\n", lakes[x-2], c);
+  }
+  //printf("Average: %0.2f° Celcius\n", d/6);
 }
 
 
