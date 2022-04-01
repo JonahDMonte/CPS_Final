@@ -3,67 +3,7 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-#include <iso646.h>
 //DECLARATION AND INITIALIZATION STARTS HERE
-int realdates(int day, int *returnday, char b[50])
-{
-  day++;
-  switch(day)
-    {
-      case 0 ... 30:
-        strcpy(b, "January" );
-        break;
-      case 31 ... 59:
-        strcpy(b, "February" );
-        day = day - 30;
-        break;
-      case 60 ... 90:
-        strcpy(b, "March" );
-        day = day - 59;   
-        break;   
-      case 91 ... 120:
-        strcpy(b, "April" );
-        day = day - 90;      
-        break;
-      case 121 ... 151:
-        strcpy(b, "May" );
-        day = day - 120;      
-        break;
-      case 152 ... 181:
-        strcpy(b, "June" );
-        day = day - 151;
-        break;
-      case 182 ... 212:
-        strcpy(b, "July" );
-        day = day - 181;
-        break;
-      case 213 ... 243:
-        strcpy(b, "August" );
-        day = day - 212;
-        break;
-      case 244 ... 273:
-        strcpy(b, "September" );
-        day = day - 243;
-        break;
-      case 274 ... 304:
-        strcpy(b, "October" );
-        day = day - 273;
-        break;
-      case 305 ... 334:
-        strcpy(b, "November" );
-        day = day - 304;
-        break;
-      case 335 ... 365:
-        strcpy(b, "December" );
-        day = day - 334;
-        break;
-    }
-  *returnday = day;
-  return 0;
-  
-  }
-
-
 struct Lake{
 char name[50];
 float d2020[400];
@@ -81,10 +21,9 @@ int frozen;
 };
 
 
-int main(void)
+int lakestructures(void)
 {
-  char returnmonth[50];
-  int returnday;
+
   struct Lake superior, michigan, huron, erie, ontario, stclair;
   struct Lake lakes[6] = {superior, michigan, huron, erie, ontario, stclair};
   strcpy(lakes[0].name, "Lake Superior");
@@ -108,7 +47,7 @@ int main(void)
       char *nums2020 = NULL;
       size_t len2020 = 0;
       
-      for(int i = 0; getline(&nums2020, &len2020, data2020) != -1; i++) //move vertically in the array
+      for(int i = 0; getline(&nums2020, &len2020, data2020) != -1; i++) //move   vertically in the array
       {
         char *line2020 = nums2020;
         char *linetok2020 = strtok(line2020, "   ");
@@ -126,7 +65,7 @@ int main(void)
       char *nums2019 = NULL;
       size_t len2019 = 0;
       
-      for(int i = 0; getline(&nums2019, &len2019, data2019) != -1; i++)//move vertically in the array
+      for(int i = 0; getline(&nums2019, &len2019, data2019) != -1; i++) //move   vertically in the array
       {
         char *line2019 = nums2019;
         char *linetok2019 = strtok(line2019, "   ");
@@ -217,43 +156,37 @@ for (int y = 0; y < 6; y++)//winter average
     }  
 
   //swimmable and frozen
-  int count1 = 0;
-  int count2 = 0;
   for(int y = 0; y < 6; y++)
     {
-      count1 = 0;
-      count2 = 0;
+      int count[2] = {0};
       for (int x = 0; x < 366; x++)
         {
           if (lakes[y].d2020[x] > 20) //test if swimmable
           {
-            count1 += 1;
+            count[0] += lakes[y].d2020[x];
           }
-          else if (lakes[y].d2020[x] < 0) //test if frozen
+          else if (lakes[y].d2020[x] < 0) //teset if frozen
           {
-            count2 += 1;
+            count[1] += lakes[y].d2020[x];
           }
-          lakes[y].swimmable = count1;
-          lakes[y].frozen = count2;
+          lakes[y].swimmable = count[0];
+          lakes[y].frozen = count[1];
         }
     }
   //CALCULATIONS END HERE
   //PRINTING ANSWERS STARTS HERE
   //q1
-  float allavg = 0;
   printf("Average Temperatures Per Lake(2020)\n");
   for (int y = 0; y < 6; y++)
     {
       printf("%s: %0.2f °C\n", lakes[y].name, lakes[y].avg2020);
-      allavg += lakes[y].avg2020;
     }
-  allavg = allavg/6;
-  printf("Total average: %0.2f°C\n",  allavg);
+
   //q2
   printf("\nWarmest and Coldest Lakes\n");
   int cold = 0;
   int warm = 0;
-  allavg = 0;
+  float allavg = 0;
   for(int y = 0; y < 6; y++)
     {
       allavg += lakes[y].avg2020;
@@ -284,171 +217,55 @@ for (int y = 0; y < 6; y++)//winter average
     {
       if (lakes[y].avg2020 > allavg)
       {
-        
         printf("%s\n", lakes[y].name);
       }
     }
 
   //q3
-  printf("\nColdest and Warmest Day on Each Lake\n"); 
-  int coldarr[6][20] = {0};
-  int warmarr[6][20] = {0};
-
+  printf("\nColdest and Warmest Day on Each Lake\n"); //TODO: Account for ties
+  int coldarr[6] = {0};
+  int warmarr[6] = {0};
   for (int y = 0; y < 6; y++)
   {
-    count1 = 0;
-    count2 = 0;
     for(int x = 0; x < 366; x++)
       {
-        if (lakes[y].d2020[x] == lakes[y].d2020[lakes[y].coldest] && lakes[y].coldest != x)
+        if (lakes[y].d2020[x] < lakes[y].d2020[coldarr[y]])
         {
-          coldarr[y][count1] = x;
-          count1++;
+          coldarr[y] = x;
         }
-        else if (lakes[y].d2020[x] == lakes[y].d2020[lakes[y].warmest] && lakes[y].warmest != x)
+        else if (lakes[y].d2020[x] > lakes[y].d2020[warmarr[y]])
         {
-          warmarr[y][count2] = x;
-          count2++;
+          warmarr[y] = x;
         }
       
       }
         printf("%s:\n", lakes[y].name);
-        realdates(lakes[y].coldest, &returnday, returnmonth);
-        printf("Coldest days (%0.2f°C): %s %d", lakes[y].d2020[lakes[y].coldest], returnmonth, returnday);
-    for (int x = 0; coldarr[y][x] != 0; x++)
-      {
-        realdates(coldarr[y][x], &returnday, returnmonth);
-        printf(", %s %d", returnmonth, returnday);
-      }
-      realdates(lakes[y].warmest, &returnday, returnmonth);
-        printf("\nWarmest days (%0.2f°C): %s %d", lakes[y].d2020[lakes[y].warmest], returnmonth, returnday);
-    for (int x = 0; warmarr[y][x] != 0; x++)
-      {
-        realdates(warmarr[y][x], &returnday, returnmonth);
-        printf(", %s %d", returnmonth, returnday);
-      }
-    printf("\n");
+        printf("Coldest day: %d\n", coldarr[y] + 1);
+        printf("Warmest day: %d\n", warmarr[y] + 1);
     }
   //q4
-  printf("\n\nWarmest and Coldest Day Across All Lakes\n");
-  int warmall = 0; //warmall is a lake ID number (0 - 5)
+  printf("\nWarmest Day Across All Lakes\n");
+  int warmall = 0; //warmall is a lakes[] number
   for (int y = 0; y < 6; y++)
     {
       if (lakes[warmall].d2020[lakes[warmall].warmest] < lakes[y].d2020[lakes[y].warmest]) 
         //if the temperature on the warmest day on the warmest lake thus far is less than the temperature on the warmest day on lake "y"
       {
-          warmall = y;  //lake "y" becomes the warmest lake.
+          warmall = y;  //the warmest lake bcomes lake "y".
       }
     }
-  
   printf("The warmest lake is %s\n", lakes[warmall].name);
-  realdates(lakes[warmall].warmest, &returnday, returnmonth);
-  printf("Day: %s %d\n", returnmonth, returnday); 
-  printf("Temperature: %0.2f°C\n", lakes[warmall].d2020[lakes[warmall].warmest]);
-
-  int coldall = 0; //coldall is a lake ID number (0 - 5)
-  for (int y = 0; y < 6; y++)
-    {
-      if (lakes[coldall].d2020[lakes[coldall].coldest] > lakes[y].d2020[lakes[y].coldest]) 
-       
-      {
-          coldall = y;  
-      }
-    }
-  
-  printf("The coldest lake is %s\n", lakes[coldall].name);
-  realdates(lakes[coldall].coldest, &returnday, returnmonth);
-  printf("Day: %s %d\n", returnmonth, returnday); 
-  printf("Temperature: %0.2f°C\n", lakes[coldall].d2020[lakes[coldall].coldest]);
-  
-//q5
-printf("\nSummer Averages \n"); 
-int sortme[6] = {0, 1, 2, 3, 4, 5}; //each element of sortme[] is a lake number (0 = superior, 1 = huron, etc) 
-// sortme[0] is the lake with the highest temp. sortme[1], 2nd highest, etc.
-int hold;
-for(int y = 0; y < 6; y++)
-  {
-    for (int x = 0; x < 6; x++)
-      {
-        if (lakes[sortme[x]].summeravg > lakes[sortme[y]].summeravg)
-        {
-        hold = sortme[y];
-        sortme[y] = sortme[x]; 
-        sortme[x] = hold;
-          
-        }
-      }
-  }
-  
-for (int y = 5; y >= 0; y = y - 1)
-  {
-    printf("%s: %0.2f°C\n", lakes[sortme[y]].name, lakes[sortme[y]].summeravg);
-  }
-  
+  printf("Day: %d\n", lakes[warmall].warmest + 1);
+  printf("Temperature; %0.2f\n", lakes[warmall].d2020[lakes[warmall].warmest]);
   
 
-
-//q6
-printf("\nWinter Averages \n"); 
-int sortme2[6] = {0, 1, 2, 3, 4, 5}; //each element of sortme[] is a lake number (0 = superior, 1 = huron, etc) 
-// sortme[0] is the lake with the highest temp. sortme[1], 2nd highest, etc.
-
-for(int y = 0; y < 6; y++)
-  {
-    for (int x = 0; x < 6; x++)
-      {
-        if (lakes[sortme2[x]].winteravg > lakes[sortme2[y]].winteravg)
-        {
-        hold = sortme2[y];
-        sortme2[y] = sortme2[x]; 
-        sortme2[x] = hold;
-          
-        }
-      }
-  }
   
-for (int y = 5; y >= 0; y = y - 1) 
-  // for some reason, sortme[] has the lakes in reverse order (coldest to hottest) so I'm printing it from top to bottom instead of bottom to top.
-  {
-    printf("%s: %0.2f°C\n", lakes[sortme2[y]].name, lakes[sortme2[y]].winteravg);
-  }
-
   
-//q7
-printf("\nAmount of Swimmable Days in Each Lake\n");
-
-  for (int y = 0; y < 6; y++)
-    {
-      printf("%s: %d\n", lakes[y].name, lakes[y].swimmable);
-    }
-
-//q8
-  printf("\nAmount of Frozen Days for Each Lake\n");
-
-  for (int y = 0; y < 6; y++)
-    {
-      printf("%s: %d\n", lakes[y].name, lakes[y].frozen);
-    }
-
-  //q9
-  printf("\nAverages Temperatures in 2019; 2020 Comparison\n\n");
-  printf("Lake Name     | 2020 Temp | 2019 Temp\n");    
-  printf("-----------------------------------------\n");
-  printf("%s | %0.2f°C    | %0.2f°C\n", lakes[0].name, lakes[0].avg2020, lakes[0].avg2019);
-  printf("%s | %0.2f°C   | %0.2f°C\n", lakes[1].name, lakes[1].avg2020, lakes[1].avg2019);
-  printf("%s    | %0.2f°C    | %0.2f°C\n", lakes[2].name, lakes[2].avg2020, lakes[2].avg2019);
-  printf("%s     | %0.2f°C   | %0.2f°C\n", lakes[3].name, lakes[3].avg2020, lakes[3].avg2019);
-  printf("%s  | %0.2f°C   | %0.2f°C\n", lakes[4].name, lakes[4].avg2020, lakes[4].avg2019);
-  printf("%s| %0.2f°C   | %0.2f°C\n", lakes[5].name, lakes[5].avg2020, lakes[5].avg2019);
-      
-
-printf("\nConclusion: Global warming is coming for us all.");
+  
   return 0;
 }
 
-
-/*
-1. Calculate the yearly average temperature for each of the lakes, and the yearly average for all six lakes put together.
+/*1. Calculate the yearly average temperature for each of the lakes, and the yearly average for all six lakes put together.
 
 2. Indicate which lake is the coldest and which one is the warmest, based on the average yearly temperatures calculated in step #1. Also indicate which lakes have average temperatures above the average of all the lakes and which ones are below that same average.
 
