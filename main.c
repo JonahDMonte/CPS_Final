@@ -7,11 +7,12 @@
 //DECLARATION AND INITIALIZATION STARTS HERE
 int realdates(int day, int *returnday, char b[50])
 {
-  day++;
   switch(day)
     {
       case 0 ... 30:
         strcpy(b, "January" );
+        day++; //this increment is only necessary for january since january has no subtraction.
+        //the increment is accounted for implicitly in the subtraction for every other month.
         break;
       case 31 ... 59:
         strcpy(b, "February" );
@@ -157,24 +158,24 @@ int main(void)
   
   //CALCULATIONS BEGIN HERE
   // Averages in 2020
-  for (int y = 0; y < 6; y++)
+  for (int y = 0; y < 6; y++) //repeat for each lake
     {
       float count = 0;
       for (int x = 0; x < 366; x++)
         {
-          count += lakes[y].d2020[x];
+          count += lakes[y].d2020[x]; //Add up all the temperatures for a given lake using a for loop
         }
-      lakes[y].avg2020 = count/366;
+      lakes[y].avg2020 = count/366; //divide by the amount of days in the given year
     }
 //Averages in 2019
-  for (int y = 0; y < 6; y++)
+  for (int y = 0; y < 6; y++)//repeat for each lake
     {
       float count = 0;
       for (int x = 0; x < 365; x++)
         {
-          count += lakes[y].d2019[x]; //Add up all temps
+          count += lakes[y].d2019[x]; //Add up all the temperatures for a given lake using a for loop
         }
-      lakes[y].avg2019 = count/365; //Divide to average and assign to avg val in struct
+      lakes[y].avg2019 = count/365; //divide by the amount of days in the given year
     }
 //Warmest and coldest day
   for (int y = 0; y < 6; y++)
@@ -291,38 +292,40 @@ for (int y = 0; y < 6; y++)//winter average
 
   //q3
   printf("\nColdest and Warmest Day on Each Lake\n"); 
-  int coldarr[6][20] = {0};
-  int warmarr[6][20] = {0};
+  int coldarr[6][20] = {0}; //Carries lake ID in the first dimension. Carries equivalent cold dates in the second dimension.
+  int warmarr[6][20] = {0}; //Carries lake ID in the first dimension. Carries equivalent warm dates in the second dimension.
 
-  for (int y = 0; y < 6; y++)
+  for (int y = 0; y < 6; y++) //iterating through the lake IDs 0-5
   {
-    count1 = 0;
-    count2 = 0;
-    for(int x = 0; x < 366; x++)
+    count1 = 0; //used to iterate through the 2nd dimension of coldarr, since it must only increment if the if statement is true.
+    count2 = 0; //used to iterate through the 2nd dimension of warmarr, since it must only increment if the if statement is true.
+    for(int x = 0; x < 366; x++) //iterating through the days
       {
-        if (lakes[y].d2020[x] == lakes[y].d2020[lakes[y].coldest] && lakes[y].coldest != x)
+        if (lakes[y].d2020[x] == lakes[y].d2020[lakes[y].coldest] && lakes[y].coldest != x) 
+          //if the current day has a temp equivalent to the coldest day AND the coldest day is not the same as the current day
         {
-          coldarr[y][count1] = x;
-          count1++;
+          coldarr[y][count1] = x; //writes the day in question to the next variable
+          count1++; //increments only if the if statement is true, moving the 2nd dimension of coldarr to the next element.
         }
         else if (lakes[y].d2020[x] == lakes[y].d2020[lakes[y].warmest] && lakes[y].warmest != x)
+          //see line 304 - just in context of warmest temperature
         {
-          warmarr[y][count2] = x;
-          count2++;
+          warmarr[y][count2] = x; //see line 306 - just in context of warmest temperature
+          count2++; //see line 307 - just in context of warmest temperature
         }
       
       }
-        printf("%s:\n", lakes[y].name);
-        realdates(lakes[y].coldest, &returnday, returnmonth);
-        printf("Coldest days (%0.2f°C): %s %d", lakes[y].d2020[lakes[y].coldest], returnmonth, returnday);
-    for (int x = 0; coldarr[y][x] != 0; x++)
+        printf("%s:\n", lakes[y].name); //print the lake name
+        realdates(lakes[y].coldest, &returnday, returnmonth); // convert the date
+        printf("Coldest days (%0.2f°C): %s %d", lakes[y].d2020[lakes[y].coldest], returnmonth, returnday); //print the date and temp
+    for (int x = 0; coldarr[y][x] != 0; x++) //iterate through the 2nd dimension of coldarr, converting and printing the congruent dates
       {
         realdates(coldarr[y][x], &returnday, returnmonth);
         printf(", %s %d", returnmonth, returnday);
       }
-      realdates(lakes[y].warmest, &returnday, returnmonth);
-        printf("\nWarmest days (%0.2f°C): %s %d", lakes[y].d2020[lakes[y].warmest], returnmonth, returnday);
-    for (int x = 0; warmarr[y][x] != 0; x++)
+      realdates(lakes[y].warmest, &returnday, returnmonth); 
+        printf("\nWarmest days (%0.2f°C): %s %d", lakes[y].d2020[lakes[y].warmest], returnmonth, returnday);//see line 319
+    for (int x = 0; warmarr[y][x] != 0; x++)//see line 320
       {
         realdates(warmarr[y][x], &returnday, returnmonth);
         printf(", %s %d", returnmonth, returnday);
@@ -364,15 +367,19 @@ for (int y = 0; y < 6; y++)//winter average
 //q5
 printf("\nSummer Averages \n"); 
 int sortme[6] = {0, 1, 2, 3, 4, 5}; //each element of sortme[] is a lake number (0 = superior, 1 = huron, etc) 
-// sortme[0] is the lake with the highest temp. sortme[1], 2nd highest, etc.
+// sortme[0] is the lake with the lowest temp. sortme[1], 2nd lowest, etc.
 int hold;
-for(int y = 0; y < 6; y++)
+for(int y = 0; y < 6; y++) 
+//keeps track of which element of sorting we're looking for i.e. y = 0 means we're looking for the first 
+// lowest element. y = 1 means the 2nd lowest element, so on and so forth.
   {
     for (int x = 0; x < 6; x++)
+      //keeps track of the element currently being compared to the "y"th element
       {
         if (lakes[sortme[x]].summeravg > lakes[sortme[y]].summeravg)
+          // if the current element is greater than the "y"th element, switch the places of the two.
         {
-        hold = sortme[y];
+        hold = sortme[y];//switch the two elements
         sortme[y] = sortme[x]; 
         sortme[x] = hold;
           
@@ -380,7 +387,9 @@ for(int y = 0; y < 6; y++)
       }
   }
   
-for (int y = 5; y >= 0; y = y - 1)
+for (int y = 5; y >= 0; y = y - 1) 
+  //sortme[] organizes from lowest to highest, so the for loop must print backwards
+  //in order to achieve highest to lowest
   {
     printf("%s: %0.2f°C\n", lakes[sortme[y]].name, lakes[sortme[y]].summeravg);
   }
@@ -391,7 +400,7 @@ for (int y = 5; y >= 0; y = y - 1)
 //q6
 printf("\nWinter Averages \n"); 
 int sortme2[6] = {0, 1, 2, 3, 4, 5}; //each element of sortme[] is a lake number (0 = superior, 1 = huron, etc) 
-// sortme[0] is the lake with the highest temp. sortme[1], 2nd highest, etc.
+// sortme[0] is the lake with the lowest temp. sortme[1], 2nd lowest, etc.
 
 for(int y = 0; y < 6; y++)
   {
@@ -408,7 +417,7 @@ for(int y = 0; y < 6; y++)
   }
   
 for (int y = 5; y >= 0; y = y - 1) 
-  // for some reason, sortme[] has the lakes in reverse order (coldest to hottest) so I'm printing it from top to bottom instead of bottom to top.
+  // sortme[] has the lakes in reverse order (coldest to hottest) so I'm printing it from top to bottom instead of bottom to top.
   {
     printf("%s: %0.2f°C\n", lakes[sortme2[y]].name, lakes[sortme2[y]].winteravg);
   }
